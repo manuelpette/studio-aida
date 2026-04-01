@@ -164,7 +164,6 @@ body {
     aspect-ratio: 1;
     will-change: transform;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
 }
 
 .gallery__image {
