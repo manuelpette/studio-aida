@@ -5,6 +5,40 @@ import { preloadImages } from "./utils.js"
 
 gsap.registerPlugin(ScrollTrigger)
 
+const claimWords = [
+  "Grow",
+  "Scale",
+  "Boost",
+  "Drive",
+  "Craft",
+  "Shape",
+  "Build",
+  "Create",
+  "Evolve",
+  "Elevate",
+  "Connect",
+  "Spark",
+  "are Aida",
+];
+
+const claimElement = document.querySelector(".media__caption span");
+const normalTick = 200;
+const lastWordTick = 3000;
+let currentWordIndex = 0;
+
+function updateWord() {
+  const word = claimWords[currentWordIndex];
+  claimElement.textContent = word;
+
+  const isLast = currentWordIndex === claimWords.length - 1;
+
+  currentWordIndex = isLast ? 0 : currentWordIndex + 1;
+
+  setTimeout(updateWord, isLast ? lastWordTick : normalTick);
+}
+
+updateWord();
+
 class StickyGridScroll {
     constructor() {
         this.getElements()
