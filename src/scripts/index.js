@@ -5,7 +5,7 @@ import { preloadImages } from "./utils.js"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const claimWords = [
+/* const claimWords = [
   "Grow",
   "Scale",
   "Boost",
@@ -37,7 +37,7 @@ function updateWord() {
   setTimeout(updateWord, isLast ? lastWordTick : normalTick);
 }
 
-updateWord();
+updateWord(); */
 
 class StickyGridScroll {
     constructor() {

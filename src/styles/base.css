@@ -1,6 +1,6 @@
 :root {
-    --font-primary: Arial, sans-serif;
-    --font-secondary: tangerine, serif;
+    --font-primary: "Roboto Mono", sans-serif;
+    --font-secondary: "Tangerine", serif;
 
     --color-text: #0b0b0b;
     --color-bg: #fff;
@@ -10,6 +10,16 @@
     --color-gradient: #2a5f08;
     --color-gradient: #ffcfe1;
     --color-gradient: #184f49;
+
+    --px: 1rem;
+
+    --fs-xs: 12rem;
+    --fs-sm: 14rem;
+    --fs-base: 16rem;
+    --fs-lg: 20rem;
+    --fs-xl: 24rem;
+    --fs-2xl: 32rem;
+    --fs-3xl: 48rem;
 }
 
 * {
@@ -26,6 +36,7 @@ body {
 }
 
 html {
+    font-size: clamp(0.75px, calc(100vw / 1440), 1px);
     -ms-overflow-style: none;
     scrollbar-width: none;
 
@@ -35,6 +46,7 @@ html {
 }
 
 body {
+    font-size: var(--fs-base);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -228,3 +240,13 @@ button:hover {
 }
 
 
+.button {
+    position: relative;
+    display: inline-block;
+    pointer-events: all;
+}
+
+.button--inline {
+    position: relative;
+    display: inline-block;
+}
