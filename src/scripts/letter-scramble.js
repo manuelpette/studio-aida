@@ -140,8 +140,8 @@ class LetterScramble extends HTMLElement {
     const fontSize = this._fontSize;
     this._width = this._canvas.width = this.offsetWidth;
     this._height = this._canvas.height = this.offsetHeight;
-    this._cols = Math.floor(this._width / fontSize);
-    this._rows = Math.floor(this._height / fontSize);
+    this._cols = Math.floor((this._width + fontSize * 2) / fontSize);
+    this._rows = Math.floor((this._height + fontSize * 2) / fontSize);
 
     this._targetMouse = { x: -999, y: -999 };
     this._currentMouse = { x: -999, y: -999 };

@@ -14,12 +14,18 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 40px 60px;
+    padding: 30rem;
     pointer-events: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 9;
+}
+
+@media (min-width: 769px) {
+    .header {
+        padding: 40rem 60rem;
+    }
 }
 
 .header::before {
