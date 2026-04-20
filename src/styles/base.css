@@ -1,9 +1,12 @@
 :root {
-    --font-primary: "Roboto Mono", sans-serif;
-    --font-secondary: "Tangerine", serif;
+    --font-primary: 'PP Neue York', 'Helvetica Neue', 'Arial', 'Segoe UI', system-ui, sans-serif;
+    --font-secondary: Arial, serif;
 
-    --color-text: #0b0b0b;
-    --color-bg: #fff;
+    --color-light: #F8F1E7;
+    --color-dark: #100E0E;
+    --color-accent: #AA1F24;
+    --color-text: var(--color-light);
+    --color-bg: var(--color-accent);
     --color-link: #000;
     --color-link-hover: #000;
     --color-gradient: #a10223;
@@ -20,7 +23,18 @@
     --fs-xl: 24rem;
     --fs-2xl: 32rem;
     --fs-3xl: 48rem;
+    --fs-4xl: 64rem;
+    --fs-5xl: 82rem;
 }
+
+@font-face {
+  font-family: 'PP Neue York';
+  src: url('/fonts/PPNeueYork-NormalRegular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap; /* mostra il fallback mentre carica */
+}
+
 
 * {
     margin: 0;
@@ -33,6 +47,8 @@ html,
 body {
     width: 100%;
     height: 100%;
+    color: var(--color-text);
+    background-color: var(--color-bg);
 }
 
 html {
@@ -150,92 +166,6 @@ button:hover {
     100% {
         transform: scaleX(0);
         transform-origin: 100% 50%;
-    }
-}
-
-.frame {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: grid;
-    grid-template-areas:
-        "infos sponsor"
-        "tags author";
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-    grid-gap: 24px;
-    align-content: space-between;
-    width: 100%;
-    height: 100vh;
-    padding: 24rem;
-    font-size: 14px;
-    line-height: 1.5;
-    pointer-events: none;
-    z-index: 1000;
-
-    a,
-    button {
-        pointer-events: auto;
-        opacity: 0.4;
-
-        &:hover {
-            text-decoration: underline;
-            text-underline-offset: 2px;
-            opacity: 1;
-        }
-    }
-
-    .frame__infos {
-        grid-area: infos;
-
-        *:not(:last-child) {
-            margin-right: 24px;
-        }
-
-        h1 {
-            @media (min-width: 768px) {
-                display: inline-block;
-            }
-        }
-
-        a {
-            display: block;
-
-            @media (min-width: 768px) {
-                display: inline-block;
-            }
-        }
-    }
-
-    .frame__archive {
-        grid-area: archive;
-    }
-
-    .frame__tags {
-        grid-area: tags;
-        display: flex;
-        column-gap: 12px;
-    }
-
-    .frame__author {
-        grid-area: author;
-        justify-self: flex-end;
-        text-align: right;
-
-        a {
-            opacity: 1;
-        }
-    }
-
-    #cdawrap {
-        grid-area: sponsor;
-        justify-self: flex-end;
-        max-width: 360px;
-        text-align: right;
-
-        strong {
-            font-weight: bold;
-        }
     }
 }
 
