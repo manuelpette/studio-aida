@@ -24,7 +24,7 @@
   <meta name="twitter:image" content="https://studioaida.digital/og-image.png" />
 
   <!-- Favicons -->
-  <link rel="icon" href="./favicon.jpg" sizes="any" />
+  <link rel="icon" href="./favicon.png" sizes="any" />
   <link rel="icon" href="/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
@@ -48,14 +48,26 @@
   <main>
     <header>
       <nav class="header" aria-label="Navigazione principale">
-        <a class="header__logo" href="/">
-          Studio Aida
-        </a>
-        <a href="mailto:team@studio-aida.com" class="button button--inline button--with-icon">team@studio-aida.com</a>
+        <h1 class="header__logo-wrapper">
+          <a class="header__logo" href="/">
+            studio<span>aida</span>
+          </a>
+        </h1>
+        <h2 class="header__claim">Build for growth.<br>Design to stand out.</h2>
       </nav>
     </header>
     <section class="hero">
-      <div class="hero__content">Multidisciplinary studio focused on creative and unique digital experiences.</div>
+      <img src="./gradients.jpg"/>
+      <div class="hero__content">
+        <div class="hero__title">
+          <h2 class="h1">Multidisciplinary studio delivering impactful and unique digital experiences.</h2>
+          <span class="pill sr-only" data-word-number="1">Content Strategy</span>
+          <span class="pill sr-only" data-word-number="2">UI/UX</span>
+          <span class="pill sr-only" data-word-number="3">Art Direction</span>
+          <span class="pill sr-only" data-word-number="4">Web Development</span>
+        </div>
+        <p>say hello <a href="mailto:team@studioaida.digital" class="button button--text">team@studioaida.digital</a></p>
+      </div>
       <canvas id="gradient"></canvas>
     </section>
     <section class="block block--main">

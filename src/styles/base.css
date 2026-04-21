@@ -31,16 +31,32 @@
     --fs-3xl: 48rem;
     --fs-4xl: 64rem;
     --fs-5xl: 82rem;
+    --fs-6xl: 112rem;
 }
 
 @font-face {
   font-family: 'PP Neue York';
-  src: url('/fonts/PPNeueYork-NormalRegular.woff2') format('woff2');
+  src: url('/fonts/PPNeueYork-NormalMedium.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap; /* mostra il fallback mentre carica */
 }
 
+@font-face {
+  font-family: 'PP Neue York';
+  src: url('/fonts/PPNeueYork-NormalRegular.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap; /* mostra il fallback mentre carica */
+}
+
+@font-face {
+  font-family: 'PP Neue York';
+  src: url('/fonts/PPNeueYork-NormalLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap; /* mostra il fallback mentre carica */
+}
 
 * {
     margin: 0;
@@ -175,6 +191,17 @@ button:hover {
     }
 }
 
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
 
 .button {
     position: relative;

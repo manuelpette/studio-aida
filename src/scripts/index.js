@@ -1,9 +1,10 @@
 import Lenis from "lenis"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { SplitText } from "gsap/SplitText"
 import { preloadImages } from "./utils.js"
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 // Initialize smooth scrolling using Lenis and synchronize it with GSAP ScrollTrigger
 function initSmoothScrolling() {
@@ -26,8 +27,42 @@ function initSmoothScrolling() {
     gsap.ticker.lagSmoothing(0)
 }
 
+const initHeroTitle = function () {
+    const heroTitle = document.querySelector(".hero__title .h1")
+    if(!heroTitle) return;
+
+    const heroTitleSplit = new SplitText(heroTitle, { type: "words" });
+    let pills = document.querySelectorAll(".hero__title .pill");
+
+    if(pills.length <= 0) return;
+
+    const mappedPills = {}
+
+    Array.from(pills).map(pill => {
+        const pillWordNumber = pill.getAttribute("data-word-number")
+        if(!pillWordNumber) return;
+
+        const num = parseInt(pillWordNumber)
+        if(mappedPills[num]) return;
+
+        mappedPills[num] = pill;
+    });
+
+    heroTitleSplit.words.map((word, index) => {
+        const i = index + 1;
+
+        if(mappedPills[i]) {
+            const pill = mappedPills[i].cloneNode(true);
+            pill.classList.remove("sr-only");
+            heroTitleSplit.words[index].appendChild(pill);
+        }
+    });
+
+}
+
 // Preload images then initialize everything
 preloadImages().then(() => {
     document.body.classList.remove("loading") // Remove loading state from body
-    initSmoothScrolling() // Initialize smooth scrolling
+    initSmoothScrolling(); // Initialize smooth scrolling
+    initHeroTitle();
 })
