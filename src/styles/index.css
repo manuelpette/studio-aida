@@ -37,12 +37,13 @@ body {
     left: 0;
     width: 100%;
     max-width: 84vw;
-    margin: 90px 30px;
+    margin: 30px 18px;
 }
 
 @media  (min-width: 768px) {
     .hero__content {
         font-size: var(--fs-5xl);
+        margin: 90px 30px;
     }
 }
 
