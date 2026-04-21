@@ -14,6 +14,12 @@
     --color-gradient: #ffcfe1;
     --color-gradient: #184f49;
 
+    /* @media (min-width: 480px)  --- XS */
+    /* @media (min-width: 768px)  --- SM */
+    /* @media (min-width: 1024px) --- MD */
+    /* @media (min-width: 1280px) --- LG */
+    /* @media (min-width: 1536px) --- XL */
+
     --px: 1rem;
 
     --fs-xs: 12rem;

@@ -23,10 +23,14 @@ body {
     }
 }
 
+.hero a[href*="neat"] {
+    opacity: 0!important;
+}
+
 .hero__content {
     position: absolute;
     color: var(--color-text);
-    font-size: var(--fs-5xl);
+    font-size: var(--fs-4xl);
     line-height: 1;
     letter-spacing: -3.33px;
     bottom: 0;
@@ -34,4 +38,15 @@ body {
     width: 100%;
     max-width: 84vw;
     margin: 90px 30px;
+}
+
+@media  (min-width: 768px) {
+    .hero__content {
+        font-size: var(--fs-5xl);
+    }
+}
+
+canvas {
+    width: 100vw;
+    height: 100vh;
 }
