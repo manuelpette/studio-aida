@@ -54,7 +54,7 @@ body {
 }
 
 .header__logo {
-    max-width: calc(455 / 1440 * 100vw);
+    max-width: clamp(175px, calc(455 / 1440 * 100vw), 650px);
 }
 
 .header__logo svg {
@@ -115,13 +115,14 @@ body {
 
 .hero__content .h1 {
     font-size: var(--fs-4xl);
-    line-height: 1;
+    line-height: 1.2;
     letter-spacing: -3.33px;
 }
 
 @media (min-width: 768px) {
     .hero__content .h1 {
         font-size: var(--fs-5xl);
+        line-height: 1;
     }
 }
 
@@ -154,13 +155,27 @@ body {
 }
 
 .hero__title .h1 > div:nth-of-type(3)::after {
-    top: -5%;
+    top: -15%;
     right: 5%;
 }
 
+@media (min-width: 768px) {
+ .hero__title .h1 > div:nth-of-type(3)::after {
+    top: -5%;
+    right: 5%;
+  }
+}
+
 .hero__title .h1 > div:nth-of-type(4)::after {
+    top: 80%;
+    left: 0%;
+}
+
+@media (min-width: 768px) {
+ .hero__title .h1 > div:nth-of-type(4)::after {
     top: 90%;
     left: 0%;
+  }
 }
 
 .hero__title .h1 > div[data-keyword-ready="true"]::after {
