@@ -31,7 +31,7 @@ const initHeroTitle = function () {
     const heroTitle = document.querySelector(".hero__title .h1")
     if(!heroTitle) return;
 
-    const heroTitleSplit = new SplitText(heroTitle, { type: "words" });
+    const heroTitleSplit = SplitText.create(heroTitle, { type: "words,lines" });
     let pills = document.querySelectorAll(".hero__title .pill");
 
     if(pills.length <= 0) return;
@@ -39,52 +39,62 @@ const initHeroTitle = function () {
     const mappedPills = {}
     const wordsWithPills = [];
 
-    heroTitleSplit.words.map((word, index) => {
-        const stagger = index * 0.1;
 
-        gsap.fromTo(word,
-            {
-                y: "120%",
-                opacity: 0,
-                rotation: 2
-            },
-            {
-                y: 0,
-                opacity: 1,
-                rotation: 0,
-                ease: "power4.out",
-                duration: 3,
-            }, stagger);
-    });
+    const animatePills = function() {
+        Array.from(pills).map(pill => {
+            const pillWordNumber = pill.getAttribute("data-keyword-number")
+            if(!pillWordNumber) return;
 
-   Array.from(pills).map(pill => {
-        const pillWordNumber = pill.getAttribute("data-keyword-number")
-        if(!pillWordNumber) return;
+            const num = parseInt(pillWordNumber)
+            if(mappedPills[num]) return;
 
-        const num = parseInt(pillWordNumber)
-        if(mappedPills[num]) return;
+            mappedPills[num] = pill;
+        });
 
-        mappedPills[num] = pill;
-    });
+        heroTitleSplit.words.map((word, index) => {
+            const i = index + 1;
 
-    heroTitleSplit.words.map((word, index) => {
-        const i = index + 1;
+            if(mappedPills[i]) {
+                const pillText = mappedPills[i].innerText;
+                heroTitleSplit.words[index].setAttribute("data-keyword", pillText);
+                wordsWithPills.push(heroTitleSplit.words[index]);
+            }
+        });
 
-        if(mappedPills[i]) {
-            const pillText = mappedPills[i].innerText;
-            heroTitleSplit.words[index].setAttribute("data-keyword", pillText);
-            wordsWithPills.push(heroTitleSplit.words[index]);
-        }
-    });
+        gsap.to(wordsWithPills, {
+            stagger: {
+                each: 0.2,
+                onStart: function() {
+                    this.targets()[0].setAttribute("data-keyword-ready", "true");
+                }
+            }
+        });
+    }
 
-    gsap.to(wordsWithPills, {
-        stagger: {
-            each: 0.2,
-            onStart: function() {
-                this.targets()[0].setAttribute("data-keyword-ready", "true");
+
+    gsap.fromTo(heroTitleSplit.lines,
+        {
+            y: "120%",
+            opacity: 0,
+            rotation: 3,
+            filter: "blur(10px)"
+        },
+        {
+            y: 0,
+            opacity: 1,
+            rotation: 0,
+            ease: "power2.out",
+            filter: "blur(0px)",
+            duration: 2,
+            stagger: {
+                each: 0.1,
+                onComplete: () =>{
+                    console.log("One Animation Complete", arguments);
+                    animatePills();
+                }
             }
         }
-    });
+    );
 }
 
 const animateFavicon = function() {
