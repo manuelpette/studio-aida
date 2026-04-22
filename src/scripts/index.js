@@ -39,7 +39,25 @@ const initHeroTitle = function () {
     const mappedPills = {}
     const wordsWithPills = [];
 
-    Array.from(pills).map(pill => {
+    heroTitleSplit.words.map((word, index) => {
+        const stagger = index * 0.1;
+
+        gsap.fromTo(word,
+            {
+                y: "120%",
+                opacity: 0,
+                rotation: 2
+            },
+            {
+                y: 0,
+                opacity: 1,
+                rotation: 0,
+                ease: "power4.out",
+                duration: 3,
+            }, stagger);
+    });
+
+   Array.from(pills).map(pill => {
         const pillWordNumber = pill.getAttribute("data-keyword-number")
         if(!pillWordNumber) return;
 
@@ -69,9 +87,40 @@ const initHeroTitle = function () {
     });
 }
 
+const animateFavicon = function() {
+    // Favicon Animation
+    const favFrames = [
+    "/favicons/fav-s.jpg",
+    "/favicons/fav-t.jpg",
+    "/favicons/fav-u.jpg",
+    "/favicons/fav-d.jpg",
+    "/favicons/fav-i.jpg",
+    "/favicons/fav-o.jpg",
+    "/favicons/fav-a.jpg",
+    "/favicons/fav-ib.jpg",
+    "/favicons/fav-db.jpg",
+    "/favicons/fav-a.jpg",
+    ];
+
+
+    let i = 0;
+
+    setInterval(() => {
+        const favicons = document.querySelectorAll(".favicon");
+        if(favicons.length === 0) return;
+
+        Array.from(favicons).map(favicon => {
+            favicon.href = favFrames[i];
+        });
+
+        i = (i + 1) % favFrames.length;
+    }, 300);
+}
+
 // Preload images then initialize everything
 preloadImages().then(() => {
     document.body.classList.remove("loading") // Remove loading state from body
     initSmoothScrolling(); // Initialize smooth scrolling
     initHeroTitle();
+    animateFavicon();
 })
