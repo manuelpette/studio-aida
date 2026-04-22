@@ -37,6 +37,7 @@ const initHeroTitle = function () {
     if(pills.length <= 0) return;
 
     const mappedPills = {}
+    const wordsWithPills = [];
 
     Array.from(pills).map(pill => {
         const pillWordNumber = pill.getAttribute("data-keyword-number")
@@ -54,9 +55,18 @@ const initHeroTitle = function () {
         if(mappedPills[i]) {
             const pillText = mappedPills[i].innerText;
             heroTitleSplit.words[index].setAttribute("data-keyword", pillText);
+            wordsWithPills.push(heroTitleSplit.words[index]);
         }
     });
 
+    gsap.to(wordsWithPills, {
+        stagger: {
+            each: 0.2,
+            onStart: function() {
+                this.targets()[0].setAttribute("data-keyword-ready", "true");
+            }
+        }
+    });
 }
 
 // Preload images then initialize everything
