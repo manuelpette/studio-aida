@@ -39,7 +39,7 @@ const initHeroTitle = function () {
     const mappedPills = {}
 
     Array.from(pills).map(pill => {
-        const pillWordNumber = pill.getAttribute("data-word-number")
+        const pillWordNumber = pill.getAttribute("data-keyword-number")
         if(!pillWordNumber) return;
 
         const num = parseInt(pillWordNumber)
@@ -52,9 +52,8 @@ const initHeroTitle = function () {
         const i = index + 1;
 
         if(mappedPills[i]) {
-            const pill = mappedPills[i].cloneNode(true);
-            pill.classList.remove("sr-only");
-            heroTitleSplit.words[index].appendChild(pill);
+            const pillText = mappedPills[i].innerText;
+            heroTitleSplit.words[index].setAttribute("data-keyword", pillText);
         }
     });
 

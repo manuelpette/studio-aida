@@ -115,7 +115,8 @@ body {
     }
 }
 
-.hero__content .pill {
+.hero__title .h1 > div[data-keyword]::after {
+    content: attr(data-keyword);
     position: absolute;
     display: inline-block;
     font-size: var(--fs-lg);
@@ -127,25 +128,25 @@ body {
     white-space: nowrap;
 }
 
-.hero__title .h1 > div:nth-of-type(1) .pill {
+.hero__title .h1 > div:nth-of-type(1)::after {
     top: -15%;
     left: 18%;
     transform: rotate(-3.47deg);
 }
 
-.hero__title .h1 > div:nth-of-type(2) .pill  {
+.hero__title .h1 > div:nth-of-type(2)::after  {
     top: 78%;
     left: 2%;
     transform: rotate(-4.59deg);
 }
 
-.hero__title .h1 > div:nth-of-type(3) .pill {
+.hero__title .h1 > div:nth-of-type(3)::after {
     top: -5%;
     right: 5%;
     transform: rotate(-3.29deg);
 }
 
-.hero__title .h1 > div:nth-of-type(4) .pill {
+.hero__title .h1 > div:nth-of-type(4)::after {
     top: 90%;
     left: 0%;
     transform: rotate(-4.59deg);
