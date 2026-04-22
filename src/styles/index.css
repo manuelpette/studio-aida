@@ -9,7 +9,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 16rem;
+    padding: 18rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -27,7 +27,7 @@ body {
     color: var(--color-dark);
     letter-spacing: -0.33px;
     line-height: 1.01;
-    padding-right: 16rem;
+
 }
 
 @media (min-width: 769px) {
@@ -99,13 +99,13 @@ body {
     left: 0;
     width: 100%;
     max-width: clamp(480px, calc(100vw * 0.84), 1750px);
-    margin: 30px 18px;
+    padding: 30rem 18rem;
     z-index: 1;
 }
 
 @media (min-width: 768px) {
     .hero__content {
-        margin: 60px 30px;
+        padding: 60rem 30rem;
     }
 }
 
