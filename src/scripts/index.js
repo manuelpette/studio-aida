@@ -34,88 +34,112 @@ const initHeroTitle = function () {
   const heroTitle = document.querySelector(".hero__title .h1");
   if (!heroTitle) return;
 
-  const heroTitleSplit = SplitText.create(heroTitle, { type: "words,lines" });
-  let pills = document.querySelectorAll(".hero__title .pill");
-
-  if (pills.length <= 0) return;
-
-  const mappedPills = {};
-  const wordsWithPills = [];
-  const tl = gsap.timeline();
-
-  tl.fromTo(
-    heroTitleSplit.lines,
-    {
-      y: "120%",
-      opacity: 0,
-      rotation: 3,
-      filter: "blur(10px)",
-    },
-    {
-      y: 0,
-      opacity: 1,
-      rotation: 0,
-      filter: "blur(0px)",
-      ease: "power2.out",
-      duration: 1.8,
-      stagger: {
-        each: 0.1,
-      },
-    },
-  );
-
-  Array.from(pills).map((pill) => {
-    const pillWordNumber = pill.getAttribute("data-keyword-number");
-    if (!pillWordNumber) return;
-
-    const num = parseInt(pillWordNumber);
-    if (mappedPills[num]) return;
-
-    mappedPills[num] = pill;
-  });
-
-  heroTitleSplit.words.map((word, index) => {
-    const i = index + 1;
-
-    if (mappedPills[i]) {
-      const pillText = mappedPills[i].innerText;
-      heroTitleSplit.words[index].setAttribute("data-keyword", pillText);
-      wordsWithPills.push(heroTitleSplit.words[index]);
-    }
-  });
-
-  tl.to(
-    wordsWithPills,
-    {
-      stagger: {
-        each: 0,
-        onStart: function () {
-          this.targets()[0].setAttribute("data-keyword-ready", "true");
-        },
-      },
-    },
-    `-=${tl.duration() / 2}`,
-  );
-
+  const pills = document.querySelectorAll(".hero__title .pill");
   const hello = document.querySelector(".hero__contact");
-  if (!hello) return;
 
-  tl.fromTo(
-    hello,
-    {
-      y: "100px",
-      opacity: 0,
-      rotation: 7,
+  if (pills.length <= 0 && !hello) return;
+
+  SplitText.create(heroTitle, {
+    type: "words,lines",
+    autoSplit: true,
+    onSplit(self) {
+      const mappedPills = {};
+      const pillsInWords = [];
+      const tl = gsap.timeline();
+
+      // Mappa pills
+      Array.from(pills).forEach((pill) => {
+        const pillWordNumber = pill.getAttribute("data-keyword-number");
+        if (!pillWordNumber) return;
+
+        const num = parseInt(pillWordNumber, 10);
+        if (mappedPills[num]) return;
+
+        mappedPills[num] = pill;
+      });
+
+      // Append pills alle parole corrette
+      self.words.forEach((word, index) => {
+        const i = index + 1;
+
+        if (mappedPills[i]) {
+          const pill = mappedPills[i].cloneNode(true);
+          pill.setAttribute("data-nosnippet", "");
+          pill.classList.remove("sr-only");
+          word.appendChild(pill);
+
+          pillsInWords.push(pill);
+        }
+      });
+
+      // Animazione lines
+      tl.fromTo(
+        self.lines,
+        {
+          y: "120%",
+          opacity: 0,
+          rotation: 3,
+          filter: "blur(10px)",
+        },
+        {
+          y: 0,
+          opacity: 1,
+          rotation: 0,
+          filter: "blur(0px)",
+          ease: "power2.out",
+          duration: 1.8,
+          stagger: {
+            each: 0.1,
+          },
+        }
+      );
+
+      // Trigger parole con pill
+      if (pillsInWords.length) {
+        tl.fromTo(
+          pillsInWords,
+          {
+            y: "50%",
+            scale: 0.95,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.6,
+            ease: "elastic.out(1,0.75)",
+            stagger: {
+              each: 0.2
+            }
+        },
+          `-=${tl.duration() / 2}`
+        );
+      }
+
+      // Animazione contact
+      if (hello) {
+        tl.fromTo(
+          hello,
+          {
+            y: "100px",
+            opacity: 0,
+            rotation: 7,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            rotation: 0,
+            duration: 2.8,
+            ease: "elastic.out(1,0.75)",
+          },
+          `-=0.2`
+        );
+      }
+
+      return tl;
     },
-    {
-      y: 0,
-      opacity: 1,
-      rotation: 0,
-      duration: 2.8,
-      ease: "elastic.out(1,0.75)",
-    },
-    `-=0.2`,
-  );
+  });
 };
 
 const animateFavicon = function () {
@@ -186,6 +210,9 @@ const animateFavicon = function () {
 };
 
 const initMagnets = function () {
+  const canUseMagnet = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!canUseMagnet) return;
+
   const magnets = document.querySelectorAll(".magnet");
   if (!magnets.length) return;
 
@@ -371,9 +398,13 @@ const initMagnets = function () {
 
 // Preload images then initialize everything
 preloadImages().then(() => {
-  document.body.classList.remove("loading"); // Remove loading state from body
-  initSmoothScrolling(); // Initialize smooth scrolling
-  initHeroTitle();
-  animateFavicon();
-  initMagnets();
+    document.fonts.ready.then(function() {
+
+    document.body.classList.remove("loading"); // Remove loading state from body
+    initSmoothScrolling(); // Initialize smooth scrolling
+    initHeroTitle();
+    animateFavicon();
+    initMagnets();
+
+  });
 });
