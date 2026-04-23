@@ -193,29 +193,47 @@ const initMagnets = function () {
     radius: 250,
     strength: 50,
     ease: 0.28,
+    epsilon: 0.01,
   };
 
-  const items = Array.from(magnets).map((el) => {
-    // Proxy Click on inner link if magnet is clicked
-    el.addEventListener("click", (e) => {
-      const link = el.querySelector("a");
-      if (link) {
-        link.click();
-      }
-    });
-    
-    return {
-        el,
-        inner: el.querySelector(".magnet__inner") || el.firstElementChild || el,
-        current: { x: 0, y: 0 },
-        target: { x: 0, y: 0 },
-        force: 0,
-        visualForce: 0,
-        distance: config.radius,
-    };
-});
-
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+  let rafId = null;
+  let isAnimating = false;
+
+  const items = Array.from(magnets).map((el) => {
+    // Proxy click on inner link if magnet is clicked
+    el.addEventListener("click", (e) => {
+      const anchor = e.target.closest("a");
+      if (anchor) return;
+
+      const link = el.querySelector("a");
+      if (link) link.click();
+    });
+
+    return {
+      el,
+      inner: el.querySelector(".magnet__inner") || el.firstElementChild || el,
+      current: { x: 0, y: 0 },
+      target: { x: 0, y: 0 },
+      force: 0,
+      visualForce: 0,
+      distance: config.radius,
+      lastTransform: "",
+    };
+  });
+
+  const startAnimation = () => {
+    if (isAnimating) return;
+    isAnimating = true;
+    rafId = requestAnimationFrame(animate);
+  };
+
+  const stopAnimation = () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    isAnimating = false;
+  };
 
   const onMouseMove = (e) => {
     items.forEach((item) => {
@@ -238,38 +256,35 @@ const initMagnets = function () {
       if (distance < config.radius) {
         const deadZone = 12;
 
-        // forza visiva: cresce avvicinandoti al centro
         const visualT = clamp(1 - distance / config.radius, 0, 1);
         const visualForce = visualT * visualT;
 
         if (distance < deadZone) {
           item.target.x = 0;
           item.target.y = 0;
-          item.force = 0; // movimento nullo al centro
-          item.visualForce = 1; // blur/scale massimi al centro
+          item.force = 0;
+          item.visualForce = 1;
           item.distance = distance;
           return;
         }
 
         const dirX = deltaX / distance;
         const dirY = deltaY / distance;
-    
+
         let moveForce;
 
         if (isHover) {
-          // dentro il box: la forza diminuisce verso il centro
           const hoverMaxDistance = Math.hypot(rect.width / 2, rect.height / 2);
           const hoverT = clamp(distance / hoverMaxDistance, 0, 1);
           moveForce = hoverT * hoverT;
         } else {
           moveForce = 1;
         }
-        
+
         const strength = config.strength * moveForce;
 
         item.target.x = dirX * strength;
         item.target.y = dirY * strength;
-
         item.force = moveForce;
         item.visualForce = visualForce;
         item.distance = distance;
@@ -281,45 +296,77 @@ const initMagnets = function () {
         item.distance = config.radius;
       }
     });
+
+    startAnimation();
   };
 
-  const animate = () => {
-    items.forEach((item) => {
-      const minEase = config.ease * 0.35;
-      const maxEase = config.ease;
-
-      const ease = lerp(maxEase, minEase, item.force || 0);
-
-      item.current.x = lerp(item.current.x, item.target.x, ease);
-      item.current.y = lerp(item.current.y, item.target.y, ease);
-
-      const scale = 1 + (item.visualForce || 0) * 0.06;
-
-      item.inner.style.transform = `
-        translate3d(${item.current.x}px, ${item.current.y}px, 0)
-        scale(${scale})
-      `;
-
-      const opacity = item.visualForce || 0;
-
-      item.inner.style.backdropFilter = `blur(${opacity * 10}px)`;
-      item.inner.style.background = `rgba(255, 255, 255, ${Math.max(0, Math.min(0.15, opacity * 0.15))})`;
-    });
-
-    requestAnimationFrame(animate);
-  };
-
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseleave", () => {
+  const resetItems = () => {
     items.forEach((item) => {
       item.target.x = 0;
       item.target.y = 0;
       item.force = 0;
       item.visualForce = 0;
+      item.distance = config.radius;
     });
-  });
 
-  animate();
+    startAnimation();
+  };
+
+  const animate = () => {
+    let hasMotion = false;
+
+    items.forEach((item) => {
+      const minEase = config.ease * 0.35;
+      const maxEase = config.ease;
+      const ease = lerp(maxEase, minEase, item.force || 0);
+
+      item.current.x = lerp(item.current.x, item.target.x, ease);
+      item.current.y = lerp(item.current.y, item.target.y, ease);
+
+      if (Math.abs(item.current.x - item.target.x) < config.epsilon) {
+        item.current.x = item.target.x;
+      } else {
+        hasMotion = true;
+      }
+
+      if (Math.abs(item.current.y - item.target.y) < config.epsilon) {
+        item.current.y = item.target.y;
+      } else {
+        hasMotion = true;
+      }
+
+      const scale = 1 + (item.visualForce || 0) * 0.06;
+
+      const x = item.current.x.toFixed(3);
+      const y = item.current.y.toFixed(3);
+      const s = scale.toFixed(3);
+
+      const transform = `translate3d(${x}px, ${y}px, 0) scale(${s})`;
+
+      if (transform !== item.lastTransform) {
+        item.inner.style.transform = transform;
+        item.lastTransform = transform;
+      }
+
+      if (
+        item.current.x !== 0 ||
+        item.current.y !== 0 ||
+        item.target.x !== 0 ||
+        item.target.y !== 0
+      ) {
+        hasMotion = true;
+      }
+    });
+
+    if (hasMotion) {
+      rafId = requestAnimationFrame(animate);
+    } else {
+      stopAnimation();
+    }
+  };
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseleave", resetItems);
 };
 
 // Preload images then initialize everything
