@@ -1,7 +1,7 @@
 body {
     font-family: var(--font-primary);
     font-size: 16rem;
-    background-color: var(--color-bg);
+    background-color: var(--color-accent);
 }
 
 .header {
@@ -23,27 +23,33 @@ body {
 }
 
 .header__claim {
-    font-size: var(--fs-lg);
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    font-size: var(--fs-lg) !important;
     color: var(--color-dark);
     letter-spacing: -0.33px;
     line-height: 1.01;
-
 }
 
-@media (min-width: 769px) {
-    .header__claim {
-        padding-right: 30rem;
-    }
+.header__logo-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .header__logo-wrapper,
 .header__logo {
     display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
     font-weight: 200;
     font-size: var(--fs-4xl);
     color: var(--color-light);
-    letter-spacing: -7.81px;
-    line-height: 0.88;
+    text-align: center;
+    gap: 16rem;
 }
 
 @media (min-width: 769px) {
@@ -54,11 +60,11 @@ body {
 }
 
 .header__logo {
-    max-width: clamp(175px, calc(455 / 1440 * 100vw), 650px);
+    max-width: 700px;
 }
 
 .header__logo svg {
-    width: 100%;
+    width: 700px;
     height: auto;
 }
 
@@ -67,10 +73,6 @@ body {
     color: inherit;
     letter-spacing: inherit;
     line-height: inherit;
-}
-
-.header__logo span {
-    font-weight: 400;
 }
 
 .hero {
@@ -101,6 +103,14 @@ body {
     max-width: clamp(480px, calc(100vw * 0.84), 1500px);
     padding: 30rem 18rem;
     z-index: 1;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @media (min-width: 768px) {
@@ -117,6 +127,8 @@ body {
     font-size: var(--fs-4xl);
     line-height: 1.2;
     letter-spacing: -3.33px;
+    text-align: center;
+    display: none;
 }
 
 @media (min-width: 768px) {
@@ -175,7 +187,7 @@ body {
 
 @media (min-width: 768px) {
  .hero__title .h1 > div .pill[data-keyword-number="4"] {
-    top: 90%;
+    top: 75%;
     left: 0%;
   }
 }
@@ -206,6 +218,7 @@ body {
     line-height: 1.01;
     margin-top: 39rem;
     font-weight: 200;
+    display: none;
 }
 
 .hero__content .hero__contact a {
