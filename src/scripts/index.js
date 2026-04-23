@@ -1,105 +1,124 @@
-import Lenis from "lenis"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { SplitText } from "gsap/SplitText"
-import { preloadImages } from "./utils.js"
+/** @format */
+
+import Lenis from "lenis";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { preloadImages } from "./utils.js";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
+const lerp = (start, end, t) => start + (end - start) * t;
 // Initialize smooth scrolling using Lenis and synchronize it with GSAP ScrollTrigger
 function initSmoothScrolling() {
-    // Create a new Lenis instance for smooth scrolling
-    const lenis = new Lenis({
-        lerp: 0.08,
-        wheelMultiplier: 1.4,
-    })
+  // Create a new Lenis instance for smooth scrolling
+  const lenis = new Lenis({
+    lerp: 0.08,
+    wheelMultiplier: 1.4,
+  });
 
-    // Synchronize Lenis scrolling with GSAP's ScrollTrigger plugin
-    lenis.on("scroll", ScrollTrigger.update)
+  // Synchronize Lenis scrolling with GSAP's ScrollTrigger plugin
+  lenis.on("scroll", ScrollTrigger.update);
 
-    // Add Lenis's requestAnimationFrame (raf) method to GSAP's ticker
-    // This ensures Lenis's smooth scroll animation updates on each GSAP tick
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000) // Convert time from seconds to milliseconds
-    })
+  // Add Lenis's requestAnimationFrame (raf) method to GSAP's ticker
+  // This ensures Lenis's smooth scroll animation updates on each GSAP tick
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000); // Convert time from seconds to milliseconds
+  });
 
-    // Disable lag smoothing in GSAP to prevent any delay in scroll animations
-    gsap.ticker.lagSmoothing(0)
+  // Disable lag smoothing in GSAP to prevent any delay in scroll animations
+  gsap.ticker.lagSmoothing(0);
 }
 
 const initHeroTitle = function () {
-    const heroTitle = document.querySelector(".hero__title .h1")
-    if(!heroTitle) return;
+  const heroTitle = document.querySelector(".hero__title .h1");
+  if (!heroTitle) return;
 
-    const heroTitleSplit = SplitText.create(heroTitle, { type: "words,lines" });
-    let pills = document.querySelectorAll(".hero__title .pill");
+  const heroTitleSplit = SplitText.create(heroTitle, { type: "words,lines" });
+  let pills = document.querySelectorAll(".hero__title .pill");
 
-    if(pills.length <= 0) return;
+  if (pills.length <= 0) return;
 
-    const mappedPills = {}
-    const wordsWithPills = [];
+  const mappedPills = {};
+  const wordsWithPills = [];
+  const tl = gsap.timeline();
 
+  tl.fromTo(
+    heroTitleSplit.words,
+    {
+      y: "120%",
+      opacity: 0,
+      rotation: 3,
+    },
+    {
+      y: 0,
+      opacity: 1,
+      rotation: 0,
+      ease: "power2.out",
+      duration: 2,
+      stagger: {
+        each: 0.1,
+      },
+    },
+  );
 
-    const animatePills = function() {
-        Array.from(pills).map(pill => {
-            const pillWordNumber = pill.getAttribute("data-keyword-number")
-            if(!pillWordNumber) return;
+  Array.from(pills).map((pill) => {
+    const pillWordNumber = pill.getAttribute("data-keyword-number");
+    if (!pillWordNumber) return;
 
-            const num = parseInt(pillWordNumber)
-            if(mappedPills[num]) return;
+    const num = parseInt(pillWordNumber);
+    if (mappedPills[num]) return;
 
-            mappedPills[num] = pill;
-        });
+    mappedPills[num] = pill;
+  });
 
-        heroTitleSplit.words.map((word, index) => {
-            const i = index + 1;
+  heroTitleSplit.words.map((word, index) => {
+    const i = index + 1;
 
-            if(mappedPills[i]) {
-                const pillText = mappedPills[i].innerText;
-                heroTitleSplit.words[index].setAttribute("data-keyword", pillText);
-                wordsWithPills.push(heroTitleSplit.words[index]);
-            }
-        });
-
-        gsap.to(wordsWithPills, {
-            stagger: {
-                each: 0.2,
-                onStart: function() {
-                    this.targets()[0].setAttribute("data-keyword-ready", "true");
-                }
-            }
-        });
+    if (mappedPills[i]) {
+      const pillText = mappedPills[i].innerText;
+      heroTitleSplit.words[index].setAttribute("data-keyword", pillText);
+      wordsWithPills.push(heroTitleSplit.words[index]);
     }
+  });
 
-
-    gsap.fromTo(heroTitleSplit.lines,
-        {
-            y: "120%",
-            opacity: 0,
-            rotation: 3,
-            filter: "blur(10px)"
+  tl.to(
+    wordsWithPills,
+    {
+      stagger: {
+        each: 0,
+        onStart: function () {
+          this.targets()[0].setAttribute("data-keyword-ready", "true");
         },
-        {
-            y: 0,
-            opacity: 1,
-            rotation: 0,
-            ease: "power2.out",
-            filter: "blur(0px)",
-            duration: 2,
-            stagger: {
-                each: 0.1,
-                onComplete: () =>{
-                    console.log("One Animation Complete", arguments);
-                    animatePills();
-                }
-            }
-        }
-    );
-}
+      },
+    },
+    `-=${tl.duration() / 2}`,
+  );
 
-const animateFavicon = function() {
-    // Favicon Animation
-    const favFrames = [
+  const hello = document.querySelector(".hero__contact");
+  if (!hello) return;
+
+  tl.fromTo(
+    hello,
+    {
+      y: "100px",
+      opacity: 0,
+      rotation: 7,
+    },
+    {
+      y: 0,
+      opacity: 1,
+      rotation: 0,
+      duration: 2.8,
+      ease: "elastic.out(1,0.75)",
+    },
+    `-=0.5`,
+  );
+};
+
+const animateFavicon = function () {
+  // Favicon Animation
+  const favFrames = [
     "/favicons/fav-s.jpg",
     "/favicons/fav-t.jpg",
     "/favicons/fav-u.jpg",
@@ -110,27 +129,151 @@ const animateFavicon = function() {
     "/favicons/fav-ib.jpg",
     "/favicons/fav-db.jpg",
     "/favicons/fav-a.jpg",
-    ];
+  ];
 
+  let i = 0;
 
-    let i = 0;
+  setInterval(() => {
+    const favicons = document.querySelectorAll(".favicon");
+    if (favicons.length === 0) return;
 
-    setInterval(() => {
-        const favicons = document.querySelectorAll(".favicon");
-        if(favicons.length === 0) return;
+    Array.from(favicons).map((favicon) => {
+      favicon.href = favFrames[i];
+    });
 
-        Array.from(favicons).map(favicon => {
-            favicon.href = favFrames[i];
-        });
+    i = (i + 1) % favFrames.length;
+  }, 300);
+};
 
-        i = (i + 1) % favFrames.length;
-    }, 300);
-}
+const initMagnets = function () {
+  const magnets = document.querySelectorAll(".magnet");
+  if (!magnets.length) return;
+
+  const config = {
+    radius: 200,
+    strength: 50,
+    ease: 0.14,
+  };
+
+  const items = Array.from(magnets).map((el) => {
+    // Proxy Click on inner link if magnet is clicked
+    el.addEventListener("click", (e) => {
+      const link = el.querySelector("a");
+      if (link) {
+        link.click();
+      }
+    });
+    
+    return {
+        el,
+        inner: el.querySelector(".magnet__inner") || el.firstElementChild || el,
+        current: { x: 0, y: 0 },
+        target: { x: 0, y: 0 },
+        force: 0,
+        visualForce: 0,
+        distance: config.radius,
+    };
+});
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+  const onMouseMove = (e) => {
+    items.forEach((item) => {
+      const rect = item.el.getBoundingClientRect();
+
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
+
+      const distance = Math.hypot(deltaX, deltaY);
+
+      if (distance < config.radius) {
+        const deadZone = 12;
+
+        // forza visiva: cresce avvicinandoti al centro
+        const visualT = clamp(1 - distance / config.radius, 0, 1);
+        const visualForce = visualT * visualT;
+
+        if (distance < deadZone) {
+          item.target.x = 0;
+          item.target.y = 0;
+          item.force = 0; // movimento nullo al centro
+          item.visualForce = 1; // blur/scale massimi al centro
+          item.distance = distance;
+          return;
+        }
+
+        // forza movimento: diminuisce avvicinandoti al centro
+        const moveT = clamp(distance / config.radius, 0, 1);
+        const moveForce = moveT * moveT;
+
+        const dirX = deltaX / distance;
+        const dirY = deltaY / distance;
+
+        const strength = config.strength * moveForce;
+
+        item.target.x = dirX * strength;
+        item.target.y = dirY * strength;
+
+        item.force = moveForce;
+        item.visualForce = visualForce;
+        item.distance = distance;
+      } else {
+        item.target.x = 0;
+        item.target.y = 0;
+        item.force = 0;
+        item.visualForce = 0;
+        item.distance = config.radius;
+      }
+    });
+  };
+
+  const animate = () => {
+    items.forEach((item) => {
+      const minEase = config.ease * 0.35;
+      const maxEase = config.ease;
+
+      const ease = lerp(maxEase, minEase, item.force || 0);
+
+      item.current.x = lerp(item.current.x, item.target.x, ease);
+      item.current.y = lerp(item.current.y, item.target.y, ease);
+
+      const scale = 1 + (item.visualForce || 0) * 0.06;
+
+      item.inner.style.transform = `
+        translate3d(${item.current.x}px, ${item.current.y}px, 0)
+        scale(${scale})
+      `;
+
+      const opacity = item.visualForce || 0;
+
+      item.inner.style.backdropFilter = `blur(${opacity * 10}px)`;
+      item.inner.style.background = `rgba(255, 255, 255, ${Math.max(0, Math.min(0.15, opacity * 0.15))})`;
+    });
+
+    requestAnimationFrame(animate);
+  };
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseleave", () => {
+    items.forEach((item) => {
+      item.target.x = 0;
+      item.target.y = 0;
+      item.force = 0;
+      item.visualForce = 0;
+    });
+  });
+
+  animate();
+};
 
 // Preload images then initialize everything
 preloadImages().then(() => {
-    document.body.classList.remove("loading") // Remove loading state from body
-    initSmoothScrolling(); // Initialize smooth scrolling
-    initHeroTitle();
-    animateFavicon();
-})
+  document.body.classList.remove("loading"); // Remove loading state from body
+  initSmoothScrolling(); // Initialize smooth scrolling
+  initHeroTitle();
+  animateFavicon();
+  initMagnets();
+});
