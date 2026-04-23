@@ -44,18 +44,20 @@ const initHeroTitle = function () {
   const tl = gsap.timeline();
 
   tl.fromTo(
-    heroTitleSplit.words,
+    heroTitleSplit.lines,
     {
       y: "120%",
       opacity: 0,
       rotation: 3,
+      filter: "blur(10px)",
     },
     {
       y: 0,
       opacity: 1,
       rotation: 0,
+      filter: "blur(0px)",
       ease: "power2.out",
-      duration: 2,
+      duration: 1.8,
       stagger: {
         each: 0.1,
       },
@@ -112,7 +114,7 @@ const initHeroTitle = function () {
       duration: 2.8,
       ease: "elastic.out(1,0.75)",
     },
-    `-=0.5`,
+    `-=0.2`,
   );
 };
 
@@ -150,9 +152,9 @@ const initMagnets = function () {
   if (!magnets.length) return;
 
   const config = {
-    radius: 200,
+    radius: 250,
     strength: 50,
-    ease: 0.14,
+    ease: 0.28,
   };
 
   const items = Array.from(magnets).map((el) => {
@@ -189,6 +191,12 @@ const initMagnets = function () {
 
       const distance = Math.hypot(deltaX, deltaY);
 
+      const isHover =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+
       if (distance < config.radius) {
         const deadZone = 12;
 
@@ -205,13 +213,20 @@ const initMagnets = function () {
           return;
         }
 
-        // forza movimento: diminuisce avvicinandoti al centro
-        const moveT = clamp(distance / config.radius, 0, 1);
-        const moveForce = moveT * moveT;
-
         const dirX = deltaX / distance;
         const dirY = deltaY / distance;
+    
+        let moveForce;
 
+        if (isHover) {
+          // dentro il box: la forza diminuisce verso il centro
+          const hoverMaxDistance = Math.hypot(rect.width / 2, rect.height / 2);
+          const hoverT = clamp(distance / hoverMaxDistance, 0, 1);
+          moveForce = hoverT * hoverT;
+        } else {
+          moveForce = 1;
+        }
+        
         const strength = config.strength * moveForce;
 
         item.target.x = dirX * strength;
