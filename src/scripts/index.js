@@ -119,7 +119,6 @@ const initHeroTitle = function () {
 };
 
 const animateFavicon = function () {
-  // Favicon Animation
   const favFrames = [
     "/favicons/fav-s.jpg",
     "/favicons/fav-t.jpg",
@@ -133,18 +132,57 @@ const animateFavicon = function () {
     "/favicons/fav-a.jpg",
   ];
 
+  const favicons = document.querySelectorAll(".favicon");
+  const defaultFavicon = favicons[0]?.href;
+
   let i = 0;
+  let lastTime = 0;
+  const interval = 300;
+  let running = false;
 
-  setInterval(() => {
-    const favicons = document.querySelectorAll(".favicon");
-    if (favicons.length === 0) return;
-
-    Array.from(favicons).map((favicon) => {
-      favicon.href = favFrames[i];
+  function setFavicon(src) {
+    favicons.forEach((favicon) => {
+      favicon.href = src;
     });
+  }
 
-    i = (i + 1) % favFrames.length;
-  }, 300);
+  function loop(now) {
+    if (!running) return;
+
+    if (now - lastTime >= interval) {
+      lastTime = now;
+
+      if (favicons.length > 0) {
+        setFavicon(favFrames[i]);
+        i = (i + 1) % favFrames.length;
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  function start() {
+    if (!running) {
+      running = true;
+      requestAnimationFrame(loop);
+    }
+  }
+
+  function stop() {
+    running = false;
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      stop();
+      setFavicon(defaultFavicon); // 👈 fallback quando non attiva
+    } else {
+      lastTime = performance.now();
+      start();
+    }
+  });
+
+  start();
 };
 
 const initMagnets = function () {
