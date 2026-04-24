@@ -83,6 +83,17 @@ html {
     }
 }
 
+@media (orientation: landscape)
+  and (pointer: coarse)
+  and (hover: none)
+  and (max-height: 500px) {
+  /* mobile landscape only */
+
+  html {
+    font-size: 0.65px;
+  }
+}
+
 body {
     font-size: var(--fs-base);
     -webkit-font-smoothing: antialiased;
