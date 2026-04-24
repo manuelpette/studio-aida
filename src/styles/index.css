@@ -389,3 +389,18 @@ canvas {
     /* color: var(--color-accent); */
     text-shadow: 0 0 10px rgba(248, 241, 231, 0.6) !important;
 }
+
+@media (orientation: landscape)
+  and (pointer: coarse)
+  and (hover: none)
+  and (max-height: 500px) {
+  /* mobile landscape only */
+
+  .header {
+    padding: 30rem 18rem;
+  }
+
+  .hero__content {
+    padding: 30rem 18rem;
+  }
+}
