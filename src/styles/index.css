@@ -98,7 +98,7 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    max-width: clamp(480px, calc(100vw * 0.84), 1500px);
+    max-width: clamp(480rem, calc(100vw * 0.84), 1500rem);
     padding: 30rem 18rem;
     z-index: 1;
 }
