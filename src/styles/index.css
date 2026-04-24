@@ -173,13 +173,6 @@ body {
     left: 0%;
 }
 
-@media (min-width: 768px) {
- .hero__title .h1 > div .pill[data-keyword-number="4"] {
-    top: 90%;
-    left: 0%;
-  }
-}
-
 .hero__title .h1 > div .pill {
     opacity: 1;
     filter: blur(0);
@@ -400,7 +393,15 @@ canvas {
     padding: 30rem 18rem;
   }
 
+  .hero__content .hero__contact {
+    margin-top: 18rem;
+  }
+
   .hero__content {
-    padding: 30rem 18rem;
+    padding: 18rem 18rem;
+  }
+
+  .hero__content .h1 {
+    font-size: var(--fs-4xl);
   }
 }
