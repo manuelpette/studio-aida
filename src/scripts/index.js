@@ -142,27 +142,37 @@ const initHeroTitle = function () {
   });
 };
 
-const animateFavicon = function () {
+const animateFavicon = async function () {
   const favFrames = [
-    "/favicons/fav-s.jpg",
-    "/favicons/fav-t.jpg",
-    "/favicons/fav-u.jpg",
-    "/favicons/fav-d.jpg",
-    "/favicons/fav-i.jpg",
-    "/favicons/fav-o.jpg",
-    "/favicons/fav-a.jpg",
-    "/favicons/fav-ib.jpg",
-    "/favicons/fav-db.jpg",
-    "/favicons/fav-a.jpg",
+    "/favicons/fav-s.webp",
+    "/favicons/fav-t.webp",
+    "/favicons/fav-u.webp",
+    "/favicons/fav-d.webp",
+    "/favicons/fav-i.webp",
+    "/favicons/fav-o.webp",
+    "/favicons/fav-a.webp",
+    "/favicons/fav-ib.webp",
+    "/favicons/fav-db.webp",
+    "/favicons/fav-a.webp",
   ];
 
   const favicons = document.querySelectorAll(".favicon");
   const defaultFavicon = favicons[0]?.href;
 
+  // Scarica ogni immagine una sola volta e crea URL locali
+  const blobFrames = await Promise.all(
+    favFrames.map(async (src) => {
+      const res = await fetch(src, { cache: "force-cache" });
+      const blob = await res.blob();
+      return URL.createObjectURL(blob);
+    })
+  );
+
   let i = 0;
   let lastTime = 0;
   const interval = 300;
   let running = false;
+  let rafId = null;
 
   function setFavicon(src) {
     favicons.forEach((favicon) => {
@@ -175,33 +185,35 @@ const animateFavicon = function () {
 
     if (now - lastTime >= interval) {
       lastTime = now;
-
-      if (favicons.length > 0) {
-        setFavicon(favFrames[i]);
-        i = (i + 1) % favFrames.length;
-      }
+      setFavicon(blobFrames[i]);
+      i = (i + 1) % blobFrames.length;
     }
 
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function start() {
-    if (!running) {
-      running = true;
-      requestAnimationFrame(loop);
-    }
+    if (running || favicons.length === 0) return;
+
+    running = true;
+    lastTime = performance.now();
+    rafId = requestAnimationFrame(loop);
   }
 
   function stop() {
     running = false;
+
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
   }
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       stop();
-      setFavicon(defaultFavicon); // 👈 fallback quando non attiva
+      setFavicon(defaultFavicon);
     } else {
-      lastTime = performance.now();
       start();
     }
   });
